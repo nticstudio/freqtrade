@@ -9,6 +9,10 @@ user_data/*
 !user_data/strategies/**
 !user_data/hyperopts/
 !user_data/hyperopts/**
+# Multi-bots Labs configs (dry-run templates, no live secrets)
+!user_data/config_ict.json
+!user_data/config_trend.json
+
 !user_data/notebooks
 !user_data/models
 !user_data/freqaimodels

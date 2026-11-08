@@ -1,0 +1,42 @@
+# Multi-bots Labs — NE PAS démarrer automatiquement.
+# Quand tu voudras l'utiliser :
+#   docker compose -f docker-compose.multi.yml up -d
+#   docker compose -f docker-compose.multi.yml down
+#
+# UI :
+#   ICT   → http://127.0.0.1:8080
+#   Trend → http://127.0.0.1:8081
+#   login-info → /login-info sur chaque port
+
+services:
+  freqtrade-ict:
+    image: freqtradeorg/freqtrade:stable
+    restart: unless-stopped
+    container_name: freqtrade-ict
+    volumes:
+      - "./user_data:/freqtrade/user_data"
+      - "./freqtrade/rpc/api_server/web_ui.py:/freqtrade/freqtrade/rpc/api_server/web_ui.py:ro"
+    ports:
+      - "127.0.0.1:8080:8080"
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade-ict.log
+      --db-url sqlite:////freqtrade/user_data/tradesv3.ict.sqlite
+      --config /freqtrade/user_data/config_ict.json
+      --strategy ICTStrategy
+
+  freqtrade-trend:
+    image: freqtradeorg/freqtrade:stable
+    restart: unless-stopped
+    container_name: freqtrade-trend
+    volumes:
+      - "./user_data:/freqtrade/user_data"
+      - "./freqtrade/rpc/api_server/web_ui.py:/freqtrade/freqtrade/rpc/api_server/web_ui.py:ro"
+    ports:
+      - "127.0.0.1:8081:8080"
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade-trend.log
+      --db-url sqlite:////freqtrade/user_data/tradesv3.trend.sqlite
+      --config /freqtrade/user_data/config_trend.json
+      --strategy Supertrend
